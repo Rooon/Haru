@@ -1,0 +1,29 @@
+﻿<Window x:Class="Haru.Snipper"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Haru"
+        mc:Ignorable="d"
+        Title="Snipper" Height="300" Width="300" Topmost="True" ResizeMode="NoResize" WindowStyle="None">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo Description="123"/>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <Canvas x:Name="snipcanvas" >
+            <Path Stroke="Black" Fill="Black" Opacity=".5">
+                <Path.Data>
+                    <CombinedGeometry GeometryCombineMode="Exclude">
+                        <CombinedGeometry.Geometry1>
+                            <RectangleGeometry x:Name="outerRect" Rect="0,0,1920,1080" />
+                        </CombinedGeometry.Geometry1>
+                        <CombinedGeometry.Geometry2>
+                            <RectangleGeometry x:Name="innerRect" Rect="50,50,100,100" >
+                            </RectangleGeometry>
+                        </CombinedGeometry.Geometry2>
+                    </CombinedGeometry>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </Grid>
+</Window>

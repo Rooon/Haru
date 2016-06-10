@@ -1,0 +1,30 @@
+﻿<Window x:Class="Haru.FormHaru"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Haru"
+        mc:Ignorable="d"
+        Title="Haru" Height="1000" Width="700" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Topmost="True" ShowInTaskbar="False" Visibility="Visible">
+    <Grid>
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Grid.Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation From="10" To="0" Duration="00:00:1" 
+                           Storyboard.TargetName="blurEffect" 
+                           Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                        <DoubleAnimation From="0" To=".85" Duration="00:00:0.5" 
+                           Storyboard.TargetName="harupng_png" 
+                           Storyboard.TargetProperty="Opacity"></DoubleAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>
+        <Image x:Name="harupng_png" Margin="0" Source="harupng.png" Stretch="Fill" Opacity="0">
+            <Image.Effect>
+                <BlurEffect Radius="10" x:Name="blurEffect"/>
+            </Image.Effect>
+        </Image>
+    </Grid>
+</Window>
