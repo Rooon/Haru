@@ -88,11 +88,10 @@ namespace Haru
         private void RegisterHotKey()
         {
             var helper = new WindowInteropHelper(this);
-            const uint VK_F10 = 0x79;
-            const uint MOD_CTRL = 0x0005;
             if (!RegisterHotKey(helper.Handle, HOTKEY_ID, 0x0006, 0x34))
             {
                 // handle error
+                System.Windows.Forms.MessageBox.Show("Couldn't register CTRL+SHIFT+4");
             }
         }
 
@@ -117,6 +116,33 @@ namespace Haru
                     break;
             }
             return IntPtr.Zero;
+        }
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam); 
+        public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+        public static IEnumerable<IntPtr> FindWindows(EnumWindowsProc filter)
+        {
+            IntPtr found = IntPtr.Zero;
+            List<IntPtr> windows = new List<IntPtr>();
+
+            EnumWindows(delegate (IntPtr wnd, IntPtr param)
+            {
+                if (filter(wnd, param))
+                {
+                    // only add the windows that pass the filter
+                    windows.Add(wnd);
+                }
+
+                // but return true here so that we iterate all windows
+                return true;
+            }, IntPtr.Zero);
+
+            return windows;
+        }
+
+        private void GetWindows()
+        {
+            EnumWindows();
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.IO;
+using System.Media;
 
 namespace Haru
 {
@@ -24,37 +25,51 @@ namespace Haru
     {
         private System.Windows.Point p1;
         private System.Windows.Point p2;
-
         private BitmapSource screenshot;
+        private State state = State.START;
+
+        enum State {START,DRAG}
 
         public Snipper()
         {
             InitializeComponent();
-            ImageBrush ib = new ImageBrush();
             screenshot = CopyScreen();
-            ib.ImageSource = screenshot;
-            snipcanvas.Background = ib;
+            snipcanvas.Background = new ImageBrush(screenshot);
             MouseDown += Snipper_MouseDown;
             MouseUp += Snipper_MouseUp;
             MouseMove += Snipper_MouseMove;
         }
 
-        private void Snipper_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            this.innerRect.Rect = new Rect(p1, e.GetPosition(this));
-        }
-
         private void Snipper_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            p1 = e.GetPosition(this);
-            //throw new NotImplementedException();
+            if (state == State.START)
+            {
+                p1 = e.GetPosition(this);
+                state = State.DRAG;
+            }
         }
 
         private void Snipper_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            //var notificationSound = new SoundPlayer(Haru.Properties.Resources.blip);
+            //notificationSound.Play();
             p2 = e.GetPosition(this);
-            System.Windows.Clipboard.SetImage(new CroppedBitmap(screenshot, new Int32Rect((int)p1.X, (int)p1.Y, (int)Math.Abs(p2.X - p1.X), (int)Math.Abs(p2.Y - p1.Y))));
-            DialogResult = true;
+            if (p1 != p2)
+            {
+                System.Windows.Clipboard.SetImage(new CroppedBitmap(screenshot, new Int32Rect((int)p1.X, (int)p1.Y, (int)Math.Abs(p2.X - p1.X), (int)Math.Abs(p2.Y - p1.Y))));
+                DialogResult = true;
+            }
+            else
+            {
+                state = State.START;
+            }
+        }
+
+        private void Snipper_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (state == State.DRAG) {
+                this.innerRect.Rect = new Rect(p1, e.GetPosition(this));
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -65,7 +80,6 @@ namespace Haru
             Width = Screen.AllScreens.Max(screen => screen.Bounds.X + screen.Bounds.Width);
             Height = Screen.AllScreens.Max(screen => screen.Bounds.Y + screen.Bounds.Height);
             outerRect.Rect = new Rect(0, 0, Width, Height);
-            innerRect.Rect = new Rect(Width / 4, Height / 4, Width/2, Height/2);
         }
 
         private static BitmapSource CopyScreen()
@@ -88,6 +102,17 @@ namespace Haru
                         Int32Rect.Empty,
                         BitmapSizeOptions.FromEmptyOptions());
                 }
+            }
+        }
+
+        public static void SaveClipboardImageToFile(string filePath)
+        {
+            var image = System.Windows.Clipboard.GetImage();
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(fileStream);
             }
         }
     }
