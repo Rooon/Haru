@@ -28,7 +28,7 @@ namespace Haru
         private BitmapSource screenshot;
         private State state = State.START;
 
-        enum State {START,DRAG}
+        enum State { START, DRAG }
 
         public Snipper()
         {
