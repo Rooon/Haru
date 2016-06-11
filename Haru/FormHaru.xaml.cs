@@ -39,18 +39,28 @@ namespace Haru
         public FormHaru()
         {
             InitializeComponent();
-            
+
             Loaded += FormHaru_Loaded;
         }
 
         private void FormHaru_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Width /= 2;
-            this.Height /= 2;
+            //this.Width /= 2;
+            //this.Height /= 2;
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width;
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight - this.Height;
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            
             var hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetWindowExTransparent(hwnd);
+            var helper = new WindowInteropHelper(this);
+            _source = HwndSource.FromHwnd(helper.Handle);
+            _source.AddHook(HwndHook);
+            RegisterHotKey();
         }
 
         [DllImport("User32.dll")]
@@ -67,15 +77,7 @@ namespace Haru
 
         private HwndSource _source;
         private const int HOTKEY_ID = 9001;
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            var helper = new WindowInteropHelper(this);
-            _source = HwndSource.FromHwnd(helper.Handle);
-            _source.AddHook(HwndHook);
-            RegisterHotKey();
-        }
+        
 
         protected override void OnClosed(EventArgs e)
         {
@@ -116,33 +118,6 @@ namespace Haru
                     break;
             }
             return IntPtr.Zero;
-        }
-        [DllImport("user32.dll")]
-        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam); 
-        public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-        public static IEnumerable<IntPtr> FindWindows(EnumWindowsProc filter)
-        {
-            IntPtr found = IntPtr.Zero;
-            List<IntPtr> windows = new List<IntPtr>();
-
-            EnumWindows(delegate (IntPtr wnd, IntPtr param)
-            {
-                if (filter(wnd, param))
-                {
-                    // only add the windows that pass the filter
-                    windows.Add(wnd);
-                }
-
-                // but return true here so that we iterate all windows
-                return true;
-            }, IntPtr.Zero);
-
-            return windows;
-        }
-
-        private void GetWindows()
-        {
-            EnumWindows();
         }
     }
 }
