@@ -23,6 +23,8 @@ namespace Haru
 
     public partial class Snipper : Window
     {
+        private static Snipper snipper = null;
+
         private System.Windows.Point p1;
         private System.Windows.Point p2;
         private BitmapSource screenshot;
@@ -103,8 +105,13 @@ namespace Haru
             }
         }
 
+        public static void Snip()
         {
+            if (snipper == null)
             {
+                snipper = new Snipper();
+                snipper.Closed += delegate { snipper = null; };
+                snipper.ShowDialog();
             }
         }
     }
