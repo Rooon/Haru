@@ -51,8 +51,6 @@ namespace Haru
 
         private void Snipper_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //var notificationSound = new SoundPlayer(Haru.Properties.Resources.blip);
-            //notificationSound.Play();
             p2 = e.GetPosition(this);
             if (p1 != p2)
             {
@@ -105,14 +103,8 @@ namespace Haru
             }
         }
 
-        public static void SaveClipboardImageToFile(string filePath)
         {
-            var image = System.Windows.Clipboard.GetImage();
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(image));
-                encoder.Save(fileStream);
             }
         }
     }
