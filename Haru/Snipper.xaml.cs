@@ -54,9 +54,10 @@ namespace Haru
         private void Snipper_MouseUp(object sender, MouseButtonEventArgs e)
         {
             p2 = e.GetPosition(this);
-            if (p1 != p2)
-            {
-                System.Windows.Clipboard.SetImage(new CroppedBitmap(screenshot, new Int32Rect((int)p1.X, (int)p1.Y, (int)Math.Abs(p2.X - p1.X), (int)Math.Abs(p2.Y - p1.Y))));
+            var rect = new Rect(p1, p2);
+            if (rect.Width > 0 && rect.Height > 0)
+                {
+                System.Windows.Clipboard.SetImage(new CroppedBitmap(screenshot, new Int32Rect((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height)));
                 DialogResult = true;
             }
             else
