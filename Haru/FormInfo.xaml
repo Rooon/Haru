@@ -5,8 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Haru"
         mc:Ignorable="d"
-        Title="FormInfo" Height="300" Width="300">
+        Title="FormInfo" Height="300" Width="300" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="20px"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Bub" Grid.Column="0" Grid.Row="0"/>
+        <Label Content="aaaaaa" Grid.Column="0" Grid.Row="1"/>
+        <Label Content="Bu" Grid.Column="0" Grid.Row="2"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Height="23" TextWrapping="Wrap" Text="TextBox"  Width="120" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Height="23" TextWrapping="Wrap" Text="TextBox"  Width="120" VerticalAlignment="Center" Margin="0,2"/>
+
     </Grid>
+
 </Window>
